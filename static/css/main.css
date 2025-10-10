@@ -4494,3 +4494,19 @@ body.mobile-nav-active #mobile-nav-toggle {
 .footer-text a, .footer-text i {
   color: #81bc9b;
 }
+
+.single-sidebar-widget .popular-post-list .thumb {
+    width: 90px; /* عرض ثابت دلخواه */
+    height: 60px; /* ارتفاع ثابت دلخواه (برای مربع شدن) */
+    min-width: 60px; /* اطمینان از ثابت ماندن عرض در فلکس‌باکس */
+    overflow: hidden; /* در صورت بزرگ بودن تصویر، قسمت اضافی را مخفی می‌کند */
+    border-radius: 1px; /* گوشه‌های گرد (اختیاری) */
+}
+
+/* تنظیم نحوه نمایش تصویر داخل کانتینر */
+.single-sidebar-widget .popular-post-list .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* مهم: تصویر را طوری تنظیم می‌کند که تمام کانتینر را پر کند و ابعاد اصلی را حفظ کند (بدون کشیده شدن)، قسمت‌های اضافی ممکن است بریده شوند. */
+    display: block;
+}

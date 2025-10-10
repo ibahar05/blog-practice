@@ -13,4 +13,4 @@ def blog_single(request, slug):
     context={
         "post":post
     }
-    return render(request,"blogs/blog-single.html", context)
+    return render(request,"blogs/blog_single.html", context)
