@@ -43,7 +43,7 @@ class Post(models.Model):
                               help_text="The current publishing status.")
     is_featured = models.BooleanField(default=False,
                                       help_text="Designates if the post should be featured on the homepage.")
-    image = models.ImageField(upload_to='blog/', blank=True, null=True,
+    image = models.ImageField(upload_to='blogs/', blank=True, null=True,
                               help_text="Optional header image for the post.")
 
     # Timestamps
@@ -97,7 +97,7 @@ class Post(models.Model):
         """
         Returns the canonical URL for a Post object. Requires URL configuration.
         """
-        return reverse('post_detail', kwargs={'slug': self.slug})
+        return reverse('blogs:blog_single', kwargs={'slug': self.slug})
     
     # def clean(self):
     #     if self.status == 'published' and not self.published_date:
