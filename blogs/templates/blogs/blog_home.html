@@ -1,4 +1,4 @@
-{% extends "main/base.html" %} {% load static %} {% block content %}
+{% extends "main/base.html" %} {% load static %} {% block content %} {% load blog_tags%}
 
 <!-- start banner Area -->
 <section class="banner-area relative blog-home-banner" id="home">
@@ -171,7 +171,7 @@
           
           {% include "blogs/blog_popular_posts.html" %}
 
-          {% include "blogs/blog_category.html"%}
+          {% postcategory %}
           
           {% include "blogs/blog_newsletter.html" %}
           
