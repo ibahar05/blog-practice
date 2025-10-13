@@ -31,3 +31,15 @@ def blog_single(request, slug):
         "post":post
     }
     return render(request,"blogs/blog_single.html", context)
+
+#--------------------------------------------------------------------------------
+
+def blog_search(request):
+    posts=Post.objects.filter(status="published")
+    if request.method =="GET":
+        posts = posts.filter(content__contains=request.GET.get("s"))
+
+
+    context = {"posts":posts}
+    return render(request, "blogs/blog_home.html", context)
+
