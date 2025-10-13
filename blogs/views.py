@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from .models import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def blog_home(request, slug=None,username=None):
     posts=Post.objects.filter(status="published")
@@ -15,7 +16,18 @@ def blog_home(request, slug=None,username=None):
         author = get_object_or_404(User, username=username)
         posts = posts.filter(author=author)
 
-    
+    posts=Paginator(posts,3)
+    page_number = request.GET.get("page")
+    try:
+        posts = posts.get_page(page_number)
+    except EmptyPage:
+        posts = posts.page(1)
+
+    except PageNotAnInteger:
+        posts = posts.page(1)
+
+
+
     context={
         "posts":posts,
         "category":category,
