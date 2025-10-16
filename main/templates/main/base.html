@@ -1,3 +1,4 @@
+{% include 'main/message.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
@@ -24,6 +25,7 @@
       href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!--
 			CSS
 			============================================= -->
@@ -215,5 +217,11 @@
     <script src="{% static 'js/owl.carousel.min.js' %}"></script>
     <script src="{% static 'js/mail-script.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   {% block scripts %}{% endblock %}
   </body>
 </html>

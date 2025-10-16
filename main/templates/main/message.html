@@ -1,0 +1,93 @@
+{% if messages %}
+<ul id="django-messages" style="display: none">
+  {% for message in messages %}
+  <li data-tags="{{ message.tags }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // تابع دریافت CSRF Token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  const csrftoken = getCookie("csrftoken");
+
+  // 🔹 نمایش پیام‌های Django (بعد از redirect)
+  let messages = document.querySelectorAll("#django-messages li");
+  messages.forEach(function (msg) {
+    let type = msg.getAttribute("data-tags");
+    let icon = "info";
+    if (type.includes("success")) icon = "success";
+    else if (type.includes("error")) icon = "error";
+    else if (type.includes("warning")) icon = "warning";
+
+    Swal.fire({
+      icon: icon,
+      title: msg.textContent,
+      confirmButtonText: "OK",
+      confirmButtonColor: "#04091e",
+      background: "#fff",
+      color: "#333",
+      width: "32em",
+      padding: "2em",
+      showClass: { popup: "animate__animated animate__fadeInDown" },
+      hideClass: { popup: "animate__animated animate__fadeOutUp" },
+    });
+  });
+
+  // 🔹 Ajax برای Newsletter
+  const newsletterForm = document.getElementById("newsletter-form");
+  if (newsletterForm) {
+    newsletterForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      let formData = new FormData(this);
+
+      fetch(this.action, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": csrftoken,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          Swal.fire({
+            icon: data.success ? "success" : "error",
+            title: data.message,
+            confirmButtonText: "OK",
+            confirmButtonColor: "#052b26",
+            background: "#fff",
+            color: "#333",
+            width: "32em",
+            padding: "2em",
+            showClass: { popup: "animate__animated animate__fadeInDown" },
+            hideClass: { popup: "animate__animated animate__fadeOutUp" },
+          });
+          newsletterForm.reset();
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Server error",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#052b26",
+          });
+        });
+    });
+  }
+});
+</script>
