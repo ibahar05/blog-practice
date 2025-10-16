@@ -38,10 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'taggit',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 
     'main.apps.MainConfig',
     'blogs.apps.BlogsConfig',
 ]
+
+SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
