@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'taggit',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'robots',
 
     'main.apps.MainConfig',
     'blogs.apps.BlogsConfig',
+    'account.apps.AccountConfig',
 ]
 
 SITE_ID = 2

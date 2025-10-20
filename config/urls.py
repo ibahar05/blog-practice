@@ -32,7 +32,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("",include("main.urls", namespace="main")),
     path("",include("blogs.urls", namespace="blogs")),
-    path("sitemap.xml",sitemap,{"sitemaps": sitemaps},name="django.contrib.sitemaps.views.sitemap",)
+    path("account/",include("account.urls", namespace="account")),
+    path("sitemap.xml",sitemap,{"sitemaps": sitemaps},name="django.contrib.sitemaps.views.sitemap"),
+    path('robots.txt', include('robots.urls')),
+
 
 ]
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

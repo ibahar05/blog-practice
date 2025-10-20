@@ -1,93 +1,75 @@
-{% if messages %}
-<ul id="django-messages" style="display: none">
-  {% for message in messages %}
-  <li data-tags="{{ message.tags }}">{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  // تابع دریافت CSRF Token
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-  const csrftoken = getCookie("csrftoken");
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
-  // 🔹 نمایش پیام‌های Django (بعد از redirect)
-  let messages = document.querySelectorAll("#django-messages li");
-  messages.forEach(function (msg) {
-    let type = msg.getAttribute("data-tags");
-    let icon = "info";
-    if (type.includes("success")) icon = "success";
-    else if (type.includes("error")) icon = "error";
-    else if (type.includes("warning")) icon = "warning";
+  // ✅ بخش ۱ — پیام‌های AJAX (Contact / Newsletter)
+  const allForms = document.querySelectorAll("form");
 
-    Swal.fire({
-      icon: icon,
-      title: msg.textContent,
-      confirmButtonText: "OK",
-      confirmButtonColor: "#04091e",
-      background: "#fff",
-      color: "#333",
-      width: "32em",
-      padding: "2em",
-      showClass: { popup: "animate__animated animate__fadeInDown" },
-      hideClass: { popup: "animate__animated animate__fadeOutUp" },
-    });
-  });
+  allForms.forEach((form) => {
+    form.addEventListener("submit", function (e) {
+      const isAjax = form.hasAttribute("data-ajax");
+      if (!isAjax) return;
 
-  // 🔹 Ajax برای Newsletter
-  const newsletterForm = document.getElementById("newsletter-form");
-  if (newsletterForm) {
-    newsletterForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      let formData = new FormData(this);
 
-      fetch(this.action, {
+      const formData = new FormData(form);
+      const action = form.getAttribute("action") || window.location.href;
+
+      fetch(action, {
         method: "POST",
         body: formData,
         headers: {
           "X-Requested-With": "XMLHttpRequest",
-          "X-CSRFToken": csrftoken,
+          "X-CSRFToken": csrftoken || "",
         },
       })
-        .then((response) => response.json())
+        .then((res) => res.json())
         .then((data) => {
           Swal.fire({
             icon: data.success ? "success" : "error",
-            title: data.message,
-            confirmButtonText: "OK",
-            confirmButtonColor: "#052b26",
+            title: data.message || (data.success ? "Success!" : "Error!"),
+            confirmButtonColor: "#052b26",  // 👈 رنگ دکمه OK
             background: "#fff",
             color: "#333",
-            width: "32em",
-            padding: "2em",
+            width: "30em",
             showClass: { popup: "animate__animated animate__fadeInDown" },
             hideClass: { popup: "animate__animated animate__fadeOutUp" },
           });
-          newsletterForm.reset();
+          if (data.success) form.reset();
         })
         .catch(() => {
           Swal.fire({
             icon: "error",
-            title: "Server error",
-            confirmButtonText: "OK",
-            confirmButtonColor: "#052b26",
+            title: "Server Error",
+            text: "Something went wrong, please try again later.",
+            confirmButtonColor: "#052b26",  // 👈 همین‌جا هم
           });
         });
     });
-  }
+  });
 });
 </script>
+
+<!-- ✅ بخش ۲ — پیام‌های Django (Redirect مثل Login/Signup) -->
+{% if messages %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  {% for message in messages %}
+    Swal.fire({
+      icon: "{{ message.tags }}".includes("success") ? "success" : "error",
+      title: "{{ message|escapejs }}",
+      confirmButtonColor: "#052b26",  // 👈 رنگ ثابت دکمه OK
+      background: "#fff",
+      color: "#333",
+      width: "30em",
+      showClass: { popup: "animate__animated animate__fadeInDown" },
+      hideClass: { popup: "animate__animated animate__fadeOutUp" },
+    });
+  {% endfor %}
+});
+</script>
+{% endif %}

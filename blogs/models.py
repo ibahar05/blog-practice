@@ -31,36 +31,27 @@ class Post(models.Model):
     )
 
     # Core Content Fields
-    title = models.CharField(max_length=255, unique=True, help_text="The main title of the post.")
-    slug = models.SlugField(max_length=255, unique=True, editable=False,
-                            help_text="Automatically generated slug from the title for URLs.")
-    content = models.TextField(help_text="The full body content of the post. Supports Markdown/HTML.")
-    summary = models.TextField(max_length=500, blank=True,
-                               help_text="A short summary/excerpt shown on listing pages.")
+    title = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, editable=False)
+    content = models.TextField()
+    summary = models.TextField(max_length=500, blank=True)
     counted_view = models.IntegerField(default=0)
 
     # Relationships
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts',
-                               help_text="The user who created the post.")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True,
-                                 related_name='posts', help_text="The primary category of the post.")
+                                 related_name='posts')
     tags = TaggableManager()
 
     # Metadata and Management
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft',
-                              help_text="The current publishing status.")
-    is_featured = models.BooleanField(default=False,
-                                      help_text="Designates if the post should be featured on the homepage.")
-    image = models.ImageField(upload_to='blogs/', blank=True, null=True,
-                              help_text="Optional header image for the post.")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    is_featured = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='blogs/', blank=True, null=True)
 
     # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      help_text="Timestamp of when the post was first created.")
-    updated_at = models.DateTimeField(auto_now=True,
-                                      help_text="Timestamp of the last modification.")
-    published_date = models.DateTimeField(null=True, blank=True,
-                                          help_text="The date and time the post was actually published.")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    published_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-published_date', '-created_at']
