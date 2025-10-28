@@ -72,20 +72,10 @@
               <li><a href="{% url "main:index" %}">Home</a></li>
               <li><a href="{% url "main:about" %}">About</a></li>
               <li><a href="{% url "blogs:blog_home" %}">Blog</a></li>
-      
-              <li class="menu-has-children">
-                <a href="">Pages</a>
-                <ul>
-                  <li><a href="elements.html">Elements</a></li>
-                  <li class="menu-has-children">
-                    <a href="">Level 2 </a>
-                    <ul>
-                      <li><a href="#">Item One</a></li>
-                      <li><a href="#">Item Two</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
+              {% if request.user.is_authenticated %}
+              <li><a href="{{ user.profile.get_absolute_url }}">Profile</a></li>
+              {% endif %}
+
               <li><a href="{% url "main:contact" %}">Contact</a></li>
             </ul>
           </nav>
